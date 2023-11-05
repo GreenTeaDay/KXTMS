@@ -11,12 +11,13 @@ const auth = (req, res, next) => {
     if (!token.startsWith('Bearer ')) {
       return res.status(401).send({ error: 'Invalid token format.' });
     }
-    const jwtToken = token.replace('Bearer ', '');
+    const jwtToken = token.replace('Bearer ', '').trim();
     const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (e) {
     res.status(401).send({ error: 'Please authenticate.' });
+    console.log(e);
   }
 };
 

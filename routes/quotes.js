@@ -37,19 +37,20 @@ router.post('/', auth, async (req, res) => {
 // Get all quotes
 router.get('/', auth, async (req, res) => {
   try {
-    const quotes = await Quote.find({ ownerId: req.user._id });
+    const quotes = await Quote.find({ customerId: req.user._id });
     res.send(quotes);
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: 'Failed to fetch the quote' });
+    res.status(500).json({ error: 'Failed to fetch quotes' });
   }
 });
+
 
 // Get a specific quote by id
 router.get('/:id', auth, async (req, res) => {
   const _id = req.params.id;
   try {
-    const quote = await Quote.findOne({ _id, ownerId: req.user._id });
+    const quote = await Quote.findOne({ _id, customerId: req.user._id });
     if (!quote) {
       return res.status(404).json({ error: 'Quote not found' });
     }
@@ -64,7 +65,7 @@ router.get('/:id', auth, async (req, res) => {
 router.patch('/:id', auth, async (req, res) => {
   const updates = Object.keys(req.body);
   try {
-    const quote = await Quote.findOne({ _id: req.params.id, ownerId: req.user._id });
+    const quote = await Quote.findOne({ _id: req.params.id, customerId: req.user._id });
     if (!quote) {
       return res.status(404).json({ error: 'Quote not found' });
     }
@@ -80,19 +81,17 @@ router.patch('/:id', auth, async (req, res) => {
 // Delete a quote
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const quote = await Quote.findOne({ _id: req.params.id, ownerId: req.user._id });
-if (!quote) {
-  return res.status(404).json({ error: 'Quote not found' });
-}
-
-    res.send(quote);
+    const quote = await Quote.findOneAndDelete({ _id: req.params.id, customerId: req.user._id });
+    if (!quote) {
+      return res.status(404).json({ error: 'Quote not found' });
+    }
+    res.status(200).json({ message: 'Quote deleted successfully' });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: 'Failed to delete the quote' });
   }
-
-  
 });
+
 
 ;
 

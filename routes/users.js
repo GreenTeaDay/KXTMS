@@ -22,8 +22,8 @@ router.post('/register', async (req, res) => {
     await user.save();
     
     console.log('Signing token with secret:', process.env.JWT_SECRET); // Log the JWT secret for debugging
-    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-    res.status(201).send({ user, token });
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  res.status(201).send({ user, token });
   } catch (e) {
     console.error('Registration error:', e);
     res.status(400).send({ error: e.message || 'Failed to register user' });
@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
     }
 
     console.log('Signing token with secret:', process.env.JWT_SECRET); // Log the JWT secret for debugging
-    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.send({ user, token });
   } catch (e) {
     console.error('Login error:', e);
