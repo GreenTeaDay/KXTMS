@@ -12,12 +12,12 @@ const quoteSchema = new Schema({
     type: Number,
     required: true
   },
-  origin: {
-    type: String,
+  originPostalCode: {
+    type: Number,
     required: true
   },
-  destination: {
-    type: String,
+  destPostalCode: {
+    type: Number,
     required: true
   },
   estimatedCost: {

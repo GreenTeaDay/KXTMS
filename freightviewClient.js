@@ -1,20 +1,29 @@
-const axios = require('axios');
-require('dotenv').config();
+// freightviewClient.js
+const request = require('request');
 
-if (!process.env.FREIGHTVIEW_API_KEY) {
-  console.error('FREIGHTVIEW_API_KEY is not set in the environment variables');
-  process.exit(1);
-}
+const freightviewClient = {
+  post: (path, body) => {
+    return new Promise((resolve, reject) => {
+      const options = {
+        method: 'POST',
+        url: `https://www.freightview.com/api/v1.0${path}`,
+        auth: {
+          user: process.env.FREIGHTVIEW_API_KEY, // Use the API key from environment variables
+        },
+        headers: {
+          'content-type': 'application/json'
+        },
+        json: body
+      };
 
-const freightviewClient = axios.create({
-  baseURL: 'https://api.freightview.com/v1.0',
-  headers: {
-    'Authorization': `Bearer ${process.env.FREIGHTVIEW_API_KEY}`
+      request(options, function (error, response, body) {
+        if (error) {
+          return reject(error);
+        }
+        resolve({ data: body }); // We're emulating the structure of Axios response for consistency
+      });
+    });
   }
-});
+};
 
 module.exports = freightviewClient;
-
-
-
-//'https://api.freightview.com/v1.0'    https://www.freightview.com/api/rates  
