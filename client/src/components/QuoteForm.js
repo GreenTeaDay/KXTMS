@@ -8,6 +8,7 @@ function QuoteForm({ token }) {
   const [estimatedCost, setEstimatedCost] = useState('');
   const [status, setStatus] = useState('Pending');
 
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
