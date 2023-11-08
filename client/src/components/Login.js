@@ -2,19 +2,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   let navigate = useNavigate();
-  navigate('/quote');
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Match this URL to your backend's login route
-      const response = await axios.post('http://localhost:3000/users/login', { 
+      const response = await axios.post('http://localhost:3001/users/login', { 
         email, 
         password 
       });
@@ -22,6 +18,10 @@ function Login() {
       // Handle login success (e.g., save token to localStorage, redirect, etc.)
       localStorage.setItem('token', response.data.token);
       console.log('Login successful:', response.data);
+      
+      // Redirect to quote page after successful login
+      navigate('/quote');
+      
     } catch (error) {
       console.error('Login error:', error);
       // Handle error (e.g., show error message)
