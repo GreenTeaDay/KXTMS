@@ -8,16 +8,17 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Here you would replace with your backend endpoint
-      const response = await axios.post('http://localhost:3000/api/login', { 
+      // Match this URL to your backend's login route
+      const response = await axios.post('http://localhost:3000/users/login', { 
         email, 
         password 
       });
       
-      // Handle login success (e.g., save token, redirect, etc.)
-      console.log(response.data);
+      // Handle login success (e.g., save token to localStorage, redirect, etc.)
+      localStorage.setItem('token', response.data.token);
+      console.log('Login successful:', response.data);
     } catch (error) {
-      console.error(error);
+      console.error('Login error:', error);
       // Handle error (e.g., show error message)
     }
   };
