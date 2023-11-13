@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../AuthContext';
 
-function QuoteForm({ token }) {
+function QuoteForm() {
+  const { token } = useContext(AuthContext);
   const [weight, setWeight] = useState('');
   const [originPostalCode, setOriginPostalCode] = useState('');
   const [destPostalCode, setDestPostalCode] = useState('');
@@ -13,6 +15,7 @@ function QuoteForm({ token }) {
   const [error, setError] = useState('');
 
   const handleSubmit = async (event) => {
+    console.log("handleSubmit called");
     event.preventDefault();
     setError('');
     try {
@@ -74,26 +77,43 @@ function QuoteForm({ token }) {
             <option value="Cancelled">Cancelled</option>
           </select>
         </div>
-        <button type="submit">Submit Quote</button>
+        <button type="submit">Submit Quote</button>  
       </form>
-      
-      {quoteResponse && (
-        <div>
-          <h2>Quote Generated Successfully</h2>
-          <p>Weight: {quoteResponse.weight}</p>
-          <p>Origin Postal Code: {quoteResponse.originPostalCode}</p>
-          <p>Destination Postal Code: {quoteResponse.destPostalCode}</p>
-          <p>Estimated Cost: {quoteResponse.estimatedCost}</p>
-          <p>Status: {quoteResponse.status}</p>
-        </div>
-      )}
-      {error && (
-        <div>
-          <p className="error">{error}</p>
-        </div>
-      )}
-    </div>
-  );
+      {quoteResponse && quoteResponse.rates && (
+      <div>
+        <h2>Quote Generated Successfully</h2>
+        {quoteResponse.rates.map((rate, index) => (
+          <div key={index}>
+            <h3>Rate #{index + 1}</h3>
+            <p>Status: {rate.status}</p>
+            <p>Mode: {rate.mode}</p>
+            <p>Payment Terms: {rate.paymentTerms}</p>
+            <p>Total Cost: ${rate.total.toFixed(2)}</p>
+            <p>Reference: {rate.ref}</p>
+            <p>Estimated Days: {rate.days}</p>
+            <p>Service Type: {rate.serviceType}</p>
+            <p>Service Description: {rate.serviceDescription}</p>
+            <p>Time: {rate.time}</p>
+            <p>Carrier: {rate.carrier} (Code: {rate.carrierCode})</p>
+            <ul>
+              {rate.charges.map((charge, chargeIndex) => (
+                <li key={chargeIndex}>
+                  {charge.name}: ${charge.amount.toFixed(2)}
+                </li>
+              ))}
+            </ul>
+            <p><a href={rate.bookUrl}>Book this rate</a></p>
+          </div>
+        ))}
+      </div>
+    )}
+    {error && (
+      <div>
+        <p className="error">{error}</p>
+      </div>
+    )}
+  </div>
+);
 }
 
 export default QuoteForm;
