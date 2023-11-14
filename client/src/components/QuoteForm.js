@@ -3,8 +3,12 @@ import axios from 'axios';
 import { AuthContext } from '../AuthContext';
 
 function QuoteForm() {
+
+  
   const { token } = useContext(AuthContext);
-  const [weight, setWeight] = useState('');
+  const [weight, setWeight] = useState(1); // Default to 0 or another sensible default
+
+  const [freightClass, setFreightClass] = useState(60); // Added state for freightClass
   const [originPostalCode, setOriginPostalCode] = useState('');
   const [destPostalCode, setDestPostalCode] = useState('');
   const [estimatedCost, setEstimatedCost] = useState('');
@@ -16,11 +20,22 @@ function QuoteForm() {
 
   const handleSubmit = async (event) => {
     console.log("handleSubmit called");
+    
     event.preventDefault();
     setError('');
+
+    console.log("Weight:", weight);
+
+
+     // Constructing the items array
+     const items = [{
+      weight: parseInt(weight), // Ensure weight is an integer
+      freightClass: freightClass // Using the freightClass state
+    }];
+
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/quotes`, 
-        { weight, originPostalCode, destPostalCode, estimatedCost, status },
+        { weight, items, originPostalCode, destPostalCode, estimatedCost, status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setQuoteResponse(response.data); // Store the quote response
@@ -52,6 +67,15 @@ function QuoteForm() {
           />
         </div>
         <div>
+          <label>Freight Class:</label> {/* Added input for Freight Class */}
+          <input
+            type="number"
+            value={freightClass}
+            onChange={e => setFreightClass(e.target.value)}
+            required
+          />
+        </div>
+        <div>
           <label>Destination Postal Code:</label>
           <input
             type="number"
@@ -79,6 +103,8 @@ function QuoteForm() {
         </div>
         <button type="submit">Submit Quote</button>  
       </form>
+
+
       {quoteResponse && quoteResponse.rates && (
       <div>
         <h2>Quote Generated Successfully</h2>
