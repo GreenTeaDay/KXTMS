@@ -39,6 +39,7 @@ function QuoteForm() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setQuoteResponse(response.data); // Store the quote response
+      console.log("quoteResponse:", response.data);
     } catch (err) {
       setError('Error generating quote: ' + err.message);
     }
@@ -106,33 +107,35 @@ function QuoteForm() {
 
 
       {quoteResponse && quoteResponse.rates && (
-      <div>
-        <h2>Quote Generated Successfully</h2>
-        {quoteResponse.rates.map((rate, index) => (
-          <div key={index}>
-            <h3>Rate #{index + 1}</h3>
-            <p>Status: {rate.status}</p>
-            <p>Mode: {rate.mode}</p>
-            <p>Payment Terms: {rate.paymentTerms}</p>
-            <p>Total Cost: ${rate.total.toFixed(2)}</p>
-            <p>Reference: {rate.ref}</p>
-            <p>Estimated Days: {rate.days}</p>
-            <p>Service Type: {rate.serviceType}</p>
-            <p>Service Description: {rate.serviceDescription}</p>
-            <p>Time: {rate.time}</p>
-            <p>Carrier: {rate.carrier} (Code: {rate.carrierCode})</p>
-            <ul>
-              {rate.charges.map((charge, chargeIndex) => (
-                <li key={chargeIndex}>
-                  {charge.name}: ${charge.amount.toFixed(2)}
-                </li>
-              ))}
-            </ul>
-            <p><a href={rate.bookUrl}>Book this rate</a></p>
-          </div>
-        ))}
+  <div>
+    <h2>Quote Generated Successfully</h2>
+    {quoteResponse.rates.map((rate, index) => (
+      <div key={index}>
+        <h3>Rate #{index + 1}</h3>
+        <p>Status: {rate.status}</p>
+        {rate.status === 'error' && <p>Error: {rate.error}</p>} {/* Display error message */}
+        <p>Mode: {rate.mode}</p>
+        <p>Payment Terms: {rate.paymentTerms}</p>
+        <p>Total Cost: ${rate.total ? rate.total.toFixed(2) : 'N/A'}</p>
+        <p>Reference: {rate.ref || 'N/A'}</p>
+        <p>Estimated Days: {rate.days || 'N/A'}</p>
+        <p>Service Type: {rate.serviceType || 'N/A'}</p>
+        <p>Service Description: {rate.serviceDescription || 'N/A'}</p>
+        <p>Time: {rate.time || 'N/A'}</p>
+        <p>Carrier: {rate.carrier} (Code: {rate.carrierCode})</p>
+        <ul>
+          {rate.charges && rate.charges.map((charge, chargeIndex) => (
+            <li key={chargeIndex}>
+              {charge.name}: ${charge.amount.toFixed(2)}
+            </li>
+          ))}
+        </ul>
+        {rate.bookUrl && <p><a href={rate.bookUrl}>Book this rate</a></p>}
       </div>
-    )}
+    ))}
+  </div>
+)}
+
     {error && (
       <div>
         <p className="error">{error}</p>
@@ -143,3 +146,6 @@ function QuoteForm() {
 }
 
 export default QuoteForm;
+
+
+
