@@ -63,10 +63,65 @@ function QuoteForm() {
 
   return (
     <div>
+      
       <form onSubmit={handleSubmit}>
-        {/* ... (rest of your form fields) */}
-        <button type="submit">Submit Quote</button>
+        <h2>Generate a Quote</h2>
+        <div>
+          <label>Weight:</label>
+          <input
+            type="number"
+            value={weight}
+            onChange={e => setWeight(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Origin Postal Code:</label>
+          <input
+            type="number"
+            value={originPostalCode}
+            onChange={e => setOriginPostalCode(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Freight Class:</label> {/* Added input for Freight Class */}
+          <input
+            type="number"
+            value={freightClass}
+            onChange={e => setFreightClass(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Destination Postal Code:</label>
+          <input
+            type="number"
+            value={destPostalCode}
+            onChange={e => setDestPostalCode(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Estimated Cost:</label>
+          <input
+            type="number"
+            value={estimatedCost}
+            onChange={e => setEstimatedCost(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Status:</label>
+          <select value={status} onChange={e => setStatus(e.target.value)}>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+        <button type="submit">Submit Quote</button>  
       </form>
+
 
       {quoteResponse && quoteResponse.freightviewQuotes && quoteResponse.freightviewQuotes.rates && (
         <div>
@@ -90,3 +145,4 @@ function QuoteForm() {
 }
 
 export default QuoteForm;
+
