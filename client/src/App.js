@@ -4,6 +4,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './components/Login';
 import QuoteForm from './components/QuoteForm'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+
 
 function App() {
   return (

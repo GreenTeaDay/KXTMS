@@ -1,6 +1,12 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import '../css/QuoteForm.css';
+import QuoteResults from './QuoteResults'; // Adjust the path as needed
+
+
+
+
 
 function QuoteForm() {
   const { token } = useContext(AuthContext);
@@ -62,7 +68,9 @@ function QuoteForm() {
   };
 
   return (
-    <div>
+    <div className='quote-form-wrapper'>
+    
+    <div className='quote-form-container'>
       
       <form onSubmit={handleSubmit}>
         <h2>Generate a Quote</h2>
@@ -119,20 +127,16 @@ function QuoteForm() {
             <option value="Cancelled">Cancelled</option>
           </select>
         </div>
-        <button type="submit">Submit Quote</button>  
+        <button type="submit">Get Quotes</button>  
       </form>
+      </div>
 
 
       {quoteResponse && quoteResponse.freightviewQuotes && quoteResponse.freightviewQuotes.rates && (
-        <div>
-          <h2>Quote Generated Successfully</h2>
-          {quoteResponse.freightviewQuotes.rates.map((rate, index) => (
-            <div key={index}>
-              <h3>Rate #{index + 1}</h3>
-              {renderRateDetails(rate)}
-            </div>
-          ))}
-        </div>
+         <div>
+         <h2>Quote Generated Successfully</h2>
+         <QuoteResults rates={quoteResponse.freightviewQuotes.rates} />
+       </div>
       )}
 
       {error && (
