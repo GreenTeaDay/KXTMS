@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../css/Login.css';  // Make sure this path is correct
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -10,47 +11,44 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/users/login`, { 
-        email, 
-        password 
-      });
-      
-      // Handle login success (e.g., save token to localStorage, redirect, etc.)
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/users/login`, { email, password });
       localStorage.setItem('token', response.data.token);
       console.log('Login successful:', response.data);
-      
-      // Redirect to quote page after successful login
       navigate('/quote');
-      
     } catch (error) {
       console.error('Login error:', error);
-      // Handle error (e.g., show error message)
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <div>
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        />
-      </div>
-      <button type="submit">Log In</button>
-    </form>
+    <div className='login-wrapper'>
+    <div className="login-container">
+      <form onSubmit={handleSubmit} className="login-form">
+        <h2>Start Smart Shipping with K&X: Booking & Quoting</h2>
+        <div className="form-group">
+          <label htmlFor="email">Email:</label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="login-button">Log In</button>
+      </form>
+    </div>
+    </div>
   );
 }
 
