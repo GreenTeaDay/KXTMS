@@ -1,35 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../css/QuoteResults.css';
 
-
 function QuoteResults({ rates }) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5); // Adjust this number as needed
 
-    console.log('Rates:', rates);
-
-    if (!Array.isArray(rates)) {
+    // Check if rates is an array
+    if (!Array.isArray(rates) || rates.length === 0) {
         return <p>No quotes available.</p>;
-      }
-    return (
-        <div>
-            {rates.map((rates, index) => (
-                <div key={index} className="quote-card">
-                    {/* Display individual quote details here */}
-                    <div className="quote-detail">
-                        <p>Mode: {rates.mode}</p>
-                        <p>payment Terms: {rates.paymentTerms}</p>
-                        <p>Total Cost: ${rates.total ? rates.total.toFixed(2) : 'N/A'}</p>
-                        <p>Reference: {rates.ref}</p>
-                        <p>Estimated Days: {rates.days}</p>
-                        <p>Service Type: {rates.serviceType}</p>
-                        <p>Service Description: {rates.serviceDescription}</p>
-                        <p>Time: {rates.time}</p>
-                        <p>Carrier: {rates.carrier}</p>
-</div>
-                </div>
+    }
+
+    
+
+    // Calculate Indices for Pagination
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentQuotes = rates.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(rates.length / itemsPerPage);
+
+
+    // Render Page Numbers
+    const renderPageNumbers = pageNumbers => (
+        
+        <div className="pagination">
+            {pageNumbers.map(number => (
+                <button key={number} onClick={() => setCurrentPage(number)}>
+                    {number}
+                </button>
             ))}
         </div>
     );
-}
 
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+    }
+
+    return (
+        <div>
+            {currentQuotes.map((rate, index) => (
+                <div key={index} className="quote-card">
+                    <div className="quote-detail">
+                        <p>Mode: {rate.mode}</p>
+                        <p>Payment Terms: {rate.paymentTerms}</p>
+                        <p>Total Cost: ${rate.total ? rate.total.toFixed(2) : 'N/A'}</p>
+                        <p>Reference: {rate.ref}</p>
+                        <p>Estimated Days: {rate.days}</p>
+                        <p>Service Type: {rate.serviceType}</p>
+                        <p>Service Description: {rate.serviceDescription}</p>
+                        <p>Time: {rate.time}</p>
+                        <p>Carrier: {rate.carrier}</p>
+                    </div>
+                </div>
+            ))}
+            {renderPageNumbers(pageNumbers)}
+        </div>
+    );
+}
 
 export default QuoteResults;
